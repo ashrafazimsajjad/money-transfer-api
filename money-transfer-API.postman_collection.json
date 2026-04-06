@@ -1,0 +1,1418 @@
+{
+  "info": {
+    "_postman_id": "ca0041ab-331c-494c-9c60-0f3ab6327406",
+    "name": "money-transfer-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "17582706",
+    "_collection_link": "https://go.postman.co/collection/17582706-ca0041ab-331c-494c-9c60-0f3ab6327406?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonresponse = pm.response.json();\r",
+              "\r",
+              "pm.environment.set(\"admin_token\", jsonresponse.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "packages": {},
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"admin@dmoney.com\",\r\n    \"password\": \"admin123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/user/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user-list",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"admin@dmoney.com\",\r\n    \"password\": \"admin123\"\r\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/user/list",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "list"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search-user-by-email-customer",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer found\", function () {\r",
+              "    pm.expect(pm.response.json().message).to.eql(\"User(s) found\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Name\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.name).to.eql(\r",
+              "        pm.environment.get(\"customer_name\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Email\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.email).to.eql(\r",
+              "        pm.environment.get(\"customer_email\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Phone Number\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.phone_number).to.eql(\r",
+              "        pm.environment.get(\"customer_phone_number\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User nid\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.nid).to.eql(\r",
+              "        pm.environment.get(\"customer_nid\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Role\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.role).to.eql(\r",
+              "        pm.environment.get(\"customer_role\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User id\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.id).to.eql(\r",
+              "        pm.environment.get(\"customer_id\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/search?email={{customer_email}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "{{customer_email}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search-user-by-email-merchant",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/search?email=agent1@dmoney.com",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "agent1@dmoney.com"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search-user-by-email-agent",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer found\", function () {\r",
+              "    pm.expect(pm.response.json().message).to.eql(\"User(s) found\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Name\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.name).to.eql(\r",
+              "        pm.environment.get(\"customer_name\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Email\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.email).to.eql(\r",
+              "        pm.environment.get(\"customer_email\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Phone Number\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.phone_number).to.eql(\r",
+              "        pm.environment.get(\"customer_phone_number\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User nid\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.nid).to.eql(\r",
+              "        pm.environment.get(\"customer_nid\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User Role\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.role).to.eql(\r",
+              "        pm.environment.get(\"customer_role\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Customer User id\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.id).to.eql(\r",
+              "        pm.environment.get(\"customer_id\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/search?email={{customer_email}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "{{customer_email}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search-user-by-id-customer",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer{{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/search/id/1?id=3",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "search",
+            "id",
+            "1"
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "3",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search-user-by-id-merchant",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User found\", function () {\r",
+              "    pm.expect(pm.response.json().message).to.eql(\"User(s) found\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Merchant User Name\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.name).to.eql(\r",
+              "        pm.environment.get(\"merchant_name\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Merchant User Email\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.email).to.eql(\r",
+              "        pm.environment.get(\"merchant_email\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Merchant User Phone Number\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.phone_number).to.eql(\r",
+              "        pm.environment.get(\"merchant_phone_number\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Merchant User nid\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.nid).to.eql(\r",
+              "        pm.environment.get(\"merchant_nid\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Merchant User Role\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.role).to.eql(\r",
+              "        pm.environment.get(\"merchant_role\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Merchant User id\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.id).to.eql(\r",
+              "        pm.environment.get(\"merchant_id\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer{{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/search/id/{{merchant_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "search",
+            "id",
+            "{{merchant_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search-user-by-id-agent",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent found\", function () {\r",
+              "    pm.expect(pm.response.json().message).to.eql(\"User(s) found\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent User Name\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.name).to.eql(\r",
+              "        pm.environment.get(\"agent_name\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent User Email\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.email).to.eql(\r",
+              "        pm.environment.get(\"agent_email\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent User Phone Number\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.phone_number).to.eql(\r",
+              "        pm.environment.get(\"agent_phone_number\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent User nid\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.nid).to.eql(\r",
+              "        pm.environment.get(\"agent_nid\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent User Role\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.role).to.eql(\r",
+              "        pm.environment.get(\"agent_role\")\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Agent User id\", function () {\r",
+              "    const res = pm.response.json();\r",
+              "    pm.expect(res.user.id).to.eql(\r",
+              "        pm.environment.get(\"agent_id\")\r",
+              "    );\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer{{admin_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/user/search/id/{{agent_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "search",
+            "id",
+            "{{agent_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "customer-user-create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "switch (status) {\r",
+              "\r",
+              "    case 201:\r",
+              "        var jsonData = pm.response.json();\r",
+              "        console.log(jsonData);\r",
+              "\r",
+              "        pm.environment.set(\"agent_name\", jsonData.user.name);\r",
+              "        pm.environment.set(\"agent_email\", jsonData.user.email);\r",
+              "        pm.environment.set(\"agent_phone_number\", jsonData.user.phone_number);\r",
+              "        pm.environment.set(\"agent_nid\", jsonData.user.nid);\r",
+              "        pm.environment.set(\"agent_role\", jsonData.user.role);\r",
+              "        pm.environment.set(\"agent_id\", jsonData.user.id);\r",
+              "        break;\r",
+              "\r",
+              "    case 401:\r",
+              "        pm.test(\"Status code is 401\", function () {\r",
+              "            pm.response.to.have.status(401);\r",
+              "        });\r",
+              "        break;\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "  \"phone_number\",\r",
+              "  \"015\" + Math.floor(10000000 + Math.random() * 90000000)\r",
+              ");\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"phone_number\": \"{{phone_number}}\",\r\n  \"nid\": \"{{$randomBankAccount}}\",\r\n  \"role\": \"Agent\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/user/create",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "create"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "customer-user-create",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "AUTH-SECRET-KEY",
+                "value": "{{AUTH-SECRET-KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"phone_number\": \"{{phone_number}}\",\r\n  \"nid\": \"{{$randomBankAccount}}\",\r\n  \"role\": \"Customer\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "create"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.24.0 (Ubuntu)"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 05 Feb 2026 10:38:58 GMT"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User created successfully\",\n    \"user\": {\n        \"name\": \"Frank McDermott\",\n        \"email\": \"Julia_Casper@gmail.com\",\n        \"phone_number\": \"01581441170\",\n        \"nid\": \"52718627\",\n        \"role\": \"Customer\",\n        \"updated_at\": \"2026-02-05T10:38:58.000000Z\",\n        \"created_at\": \"2026-02-05T10:38:58.000000Z\",\n        \"id\": 24\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "merchant-user-create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "switch (status) {\r",
+              "\r",
+              "    case 201:\r",
+              "        var jsonData = pm.response.json();\r",
+              "        console.log(jsonData);\r",
+              "\r",
+              "        pm.environment.set(\"merchant_name\", jsonData.user.name);\r",
+              "        pm.environment.set(\"merchant_email\", jsonData.user.email);\r",
+              "        pm.environment.set(\"merchant_phone_number\", jsonData.user.phone_number);\r",
+              "        pm.environment.set(\"merchant_nid\", jsonData.user.nid);\r",
+              "        pm.environment.set(\"merchant_role\", jsonData.user.role);\r",
+              "        pm.environment.set(\"merchant_id\", jsonData.user.id);\r",
+              "        break;\r",
+              "\r",
+              "    case 401:\r",
+              "        pm.test(\"Status code is 401\", function () {\r",
+              "            pm.response.to.have.status(401);\r",
+              "        });\r",
+              "        break;\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "  \"phone_number\",\r",
+              "  \"015\" + Math.floor(10000000 + Math.random() * 90000000)\r",
+              ");\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"phone_number\": \"{{phone_number}}\",\r\n  \"nid\": \"{{$randomBankAccount}}\",\r\n  \"role\": \"Merchant\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/user/create",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "create"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "user-create",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "AUTH-SECRET-KEY",
+                "value": "{{AUTH-SECRET-KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"phone_number\": \"{{phone_number}}\",\r\n  \"nid\": \"{{$randomBankAccount}}\",\r\n  \"role\": \"Merchant\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "create"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.24.0 (Ubuntu)"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 05 Feb 2026 10:08:43 GMT"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User created successfully\",\n    \"user\": {\n        \"name\": \"Rex Mertz\",\n        \"email\": \"Savanna.Wilderman@gmail.com\",\n        \"phone_number\": \"01581655446\",\n        \"nid\": \"32902455\",\n        \"role\": \"Merchant\",\n        \"updated_at\": \"2026-02-05T10:08:43.000000Z\",\n        \"created_at\": \"2026-02-05T10:08:43.000000Z\",\n        \"id\": 13\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "agent-user-create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var status = pm.response.code;\r",
+              "\r",
+              "switch (status) {\r",
+              "\r",
+              "    case 201:\r",
+              "        var jsonData = pm.response.json();\r",
+              "        console.log(jsonData);\r",
+              "\r",
+              "        pm.environment.set(\"agent_name\", jsonData.user.name);\r",
+              "        pm.environment.set(\"agent_email\", jsonData.user.email);\r",
+              "        pm.environment.set(\"agent_phone_number\", jsonData.user.phone_number);\r",
+              "        pm.environment.set(\"agent_nid\", jsonData.user.nid);\r",
+              "        pm.environment.set(\"agent_role\", jsonData.user.role);\r",
+              "        pm.environment.set(\"agent_id\", jsonData.user.id);\r",
+              "        break;\r",
+              "\r",
+              "    case 401:\r",
+              "        pm.test(\"Status code is 401\", function () {\r",
+              "            pm.response.to.have.status(401);\r",
+              "        });\r",
+              "        break;\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "  \"phone_number\",\r",
+              "  \"015\" + Math.floor(10000000 + Math.random() * 90000000)\r",
+              ");\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"phone_number\": \"{{phone_number}}\",\r\n  \"nid\": \"{{$randomBankAccount}}\",\r\n  \"role\": \"Agent\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/user/create",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "create"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "agent-user-create",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "AUTH-SECRET-KEY",
+                "value": "{{AUTH-SECRET-KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"phone_number\": \"{{phone_number}}\",\r\n  \"nid\": \"{{$randomBankAccount}}\",\r\n  \"role\": \"Agent\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "create"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.24.0 (Ubuntu)"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 05 Feb 2026 10:33:48 GMT"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User created successfully\",\n    \"user\": {\n        \"name\": \"Darrel Heathcote\",\n        \"email\": \"Kasey51@gmail.com\",\n        \"phone_number\": \"01558593640\",\n        \"nid\": \"48685755\",\n        \"role\": \"Agent\",\n        \"updated_at\": \"2026-02-05T10:33:48.000000Z\",\n        \"created_at\": \"2026-02-05T10:33:48.000000Z\",\n        \"id\": 21\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "balance-check",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer{{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/transaction/balance/01900000001",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction",
+            "balance",
+            "01900000001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "transaction-history",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer{{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/transaction/history/01900000001?page=1&limit=20",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction",
+            "history",
+            "01900000001"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deposit-system-to-agent",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"from_account\": \"SYSTEM\",\r\n  \"to_account\": \"01599999999\",\r\n  \"amount\": 2000\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transaction/deposit",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction",
+            "deposit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "withdraw-customer-to-agent",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"from_account\": \"01622222222\",\r\n  \"to_account\": \"01512345678\",\r\n  \"amount\": 500\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transaction/withdraw",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction",
+            "withdraw"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-money-customer-to-customer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"from_account\": \"01611111111\",\r\n  \"to_account\": \"01622222222\",\r\n  \"amount\": 100\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transaction/sendmoney",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction",
+            "sendmoney"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "payment-customer-to-merchant",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"from_account\": \"01611111111\",\r\n  \"to_account\": \"01812345678\",\r\n  \"amount\": 250\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transaction/payment",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction",
+            "payment"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "commission-listing",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY-SYSTEM",
+            "value": "{{AUTH-SECRET-KEY-SYSTEM}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/commission/list?page=1&limit=20",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "commission",
+            "list"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "commission-create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY-SYSTEM",
+            "value": "{{AUTH-SECRET-KEY-SYSTEM}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"from_role\": \"Customer\",\r\n  \"to_role\": \"Merchant\",\r\n  \"type\": \"FIXED\",\r\n  \"value\": 5\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/commission/create",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "commission",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin-create-virtual-money",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY-SYSTEM",
+            "value": "{{AUTH-SECRET-KEY-SYSTEM}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"amount\": 1000\r\n\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/system/virtual-money/create",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "system",
+            "virtual-money",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "system-virtual-balance",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY",
+            "value": "{{AUTH-SECRET-KEY}}",
+            "type": "text"
+          },
+          {
+            "key": "AUTH-SECRET-KEY-SYSTEM",
+            "value": "{{AUTH-SECRET-KEY-SYSTEM}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/system/balance",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "system",
+            "balance"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
